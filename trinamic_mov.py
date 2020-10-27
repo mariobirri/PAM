@@ -24,12 +24,49 @@ M1.setAxisParameter(181, 14000)
 M1.setAxisParameter(5, 400000)
 M1.setMaxVelocity(15000)
 
+stepRev = 200 * 32
+mmStep = 1 / stepRev
+
 topic =['STOP','M1.HOME','M1.SPEED','M1.POS','M1.RBV','M1.SCAN']
 
+# homing procedure
+def home(inMotor, inTopic):
+	hpos =[0,0,0]
+	inMotor.rotate(-15000)
+	while inMotor.getAxisParameter(3) != 0:
+		publish.single(inTopic, posInMm(inMotor.getActualPosition()), hostname=var.mqtt_server)
+		time.sleep(0.2)
+	inMotor.stop()
+	hpos[0] = inMotor.getActualPosition()
+	inMotor.moveTo(hpos[0] + 5000)
+
+	inMotor.rotate(-15000)
+	while inMotor.getAxisParameter(3) != 0:
+		publish.single(inTopic, posInMm(inMotor.getActualPosition()), hostname=var.mqtt_server)
+		time.sleep(0.2)
+	inMotor.stop()
+	hpos[1] = inMotor.getActualPosition()
+	inMotor.moveTo(hpos[1] + 5000)
+
+	inMotor.rotate(-15000)
+	while inMotor.getAxisParameter(3) != 0:
+		publish.single(inTopic, posInMm(inMotor.getActualPosition()), hostname=var.mqtt_server)
+		time.sleep(0.2)
+	inMotor.stop()
+	hpos[2] = inMotor.getActualPosition()
+	inMotor.moveTo(hpos[2] + 5000)
+
+	hposMean = int((hpos[0] + hpos[1] + hpos[2]) / 3)
+	print(hposMean)
+	inMotor.moveTo(hposMean + 5000)
+	inMotor.setAxisParameter(1,5000)
 
 # convert a msg to an int value
 def msg2Int(inMsg):
 	return int(inMsg.payload.decode('UTF-8'))
+
+def posInMm(pos):
+	return float("{:.3f}".format(pos * mmStep))
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
@@ -41,14 +78,10 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
 
 	if msg.topic == 'STOP': M1.stop()
-	elif msg.topic == 'M1.SCAN': publish.single('M1.RBV', M1.getActualPosition(), hostname=var.mqtt_server)
+	elif msg.topic == 'M1.SCAN': publish.single('M1.RBV', posInMm(M1.getActualPosition()), hostname=var.mqtt_server)
 	elif msg.topic == 'M1.POS': M1.moveTo(msg2Int(msg), M1.getMaxVelocity())
 	elif msg.topic == 'M1.SPEED': M1.setMaxVelocity(msg2Int(msg))
-	elif msg.topic == 'M1.HOME':
-		M1.rotate(15000)
-		while M1.getAxisParameter(3) != 0: time.sleep(0.1)
-		M1.stop()
-		M1.setAxisParameter(1, 0)
+	elif msg.topic == 'M1.HOME': home(M1, 'M1.RBV')
 
 
 client = mqtt.Client()
