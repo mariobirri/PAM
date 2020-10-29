@@ -140,6 +140,8 @@ def on_message(client, userdata, msg):
 
 	global M0TWV, M1TWV, M2TWV, M3TWV, M4TWV, M5TWV
 
+	if msg.payload == '': break;
+
 	if msg.topic == 'STOP': M0.stop();M1.stop();M2.stop();M3.stop();M4.stop();M5.stop();
 	elif msg.topic == 'SCAN': scan();
 
