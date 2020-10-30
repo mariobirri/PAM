@@ -622,7 +622,7 @@
         "topic": "",
         "min": "0.5",
         "max": "28.5",
-        "step": "0.2",
+        "step": "0.1",
         "x": 430,
         "y": 500,
         "wires": [
@@ -2526,7 +2526,7 @@
         "payload": "",
         "payloadType": "str",
         "topic": "",
-        "x": 130,
+        "x": 370,
         "y": 340,
         "wires": [
             [
@@ -2552,7 +2552,7 @@
         "payload": "",
         "payloadType": "str",
         "topic": "",
-        "x": 130,
+        "x": 370,
         "y": 480,
         "wires": [
             [
@@ -2571,7 +2571,7 @@
         "timer": "",
         "oldrc": false,
         "name": "",
-        "x": 410,
+        "x": 650,
         "y": 340,
         "wires": [
             [
@@ -2593,7 +2593,7 @@
         "label": "msgTMCM",
         "format": "{{msg.payload}}",
         "layout": "row-spread",
-        "x": 710,
+        "x": 950,
         "y": 320,
         "wires": []
     },
@@ -2609,7 +2609,7 @@
         "label": "msgEpics",
         "format": "{{msg.payload}}",
         "layout": "row-spread",
-        "x": 700,
+        "x": 940,
         "y": 480,
         "wires": []
     },
@@ -2624,7 +2624,7 @@
         "timer": "",
         "oldrc": false,
         "name": "",
-        "x": 420,
+        "x": 660,
         "y": 480,
         "wires": [
             [
@@ -2656,7 +2656,7 @@
         "payload": "",
         "payloadType": "str",
         "topic": "",
-        "x": 130,
+        "x": 370,
         "y": 400,
         "wires": [
             [
@@ -2675,7 +2675,7 @@
         "timer": "",
         "oldrc": false,
         "name": "",
-        "x": 470,
+        "x": 710,
         "y": 400,
         "wires": [
             [
@@ -2703,7 +2703,7 @@
         "payload": "",
         "payloadType": "str",
         "topic": "",
-        "x": 130,
+        "x": 370,
         "y": 540,
         "wires": [
             [
@@ -2722,7 +2722,7 @@
         "timer": "",
         "oldrc": false,
         "name": "",
-        "x": 510,
+        "x": 750,
         "y": 540,
         "wires": [
             [
@@ -2733,6 +2733,46 @@
             ],
             [
                 "d2d99d8b.a51f6"
+            ]
+        ]
+    },
+    {
+        "id": "ef029505.6c33b8",
+        "type": "inject",
+        "z": "11799c79.eb1f94",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "10",
+        "x": 130,
+        "y": 340,
+        "wires": [
+            [
+                "813f7541.0569f8"
+            ]
+        ]
+    },
+    {
+        "id": "271277f7.129e98",
+        "type": "inject",
+        "z": "11799c79.eb1f94",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "12",
+        "x": 130,
+        "y": 480,
+        "wires": [
+            [
+                "74a57c53.444be4"
             ]
         ]
     }
