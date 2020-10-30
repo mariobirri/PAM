@@ -11,8 +11,8 @@ class myDriver(Driver):
 		super(myDriver, self).__init__()
 
 	def read(self, reason):
-		
-		return subscribe.simple(reason, hostname=var.mqtt_server).payload;
+		#print(subscribe.simple(reason, hostname=var.mqtt_server).payload);
+		return float(subscribe.simple(reason, hostname=var.mqtt_server).payload);
 		'''
 		if reason == 'M0.RBV': value = subscribe.simple('M0.RBV', hostname=var.mqtt_server).payload;
                 elif  reason == 'M1.RBV': value = subscribe.simple('M1.RBV', hostname=var.mqtt_server).payload;
@@ -28,7 +28,9 @@ class myDriver(Driver):
 		
 	def write(self, reason, value):
         	status = True
-		publish.single(reason, value, hostname=var.mqtt_server);
+		#print(value)
+		#print(reason)
+		publish.single(reason, str(value), hostname=var.mqtt_server);
 		'''
 		if reason == 'STOP': publish.single('STOP', value, hostname=var.mqtt_server);
 			
@@ -82,6 +84,7 @@ if __name__ == '__main__':
     server = SimpleServer()
     server.createPV(ed.prefix, ed.pvdb)
     driver = myDriver()
+    print("connected")
 
 while True:
 	server.process(0.2)
