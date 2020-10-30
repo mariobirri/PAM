@@ -11,8 +11,7 @@ import time
 
 connectionManager = ConnectionManager()
 con = connectionManager.connect()
-PyTrinamic.showInfo()
-print("connected")
+
 M0 = MOT(con,0)
 M1 = MOT(con,1)
 M2 = MOT(con,2)
@@ -132,7 +131,7 @@ def scan():
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
-	print("Connected with result code "+str(rc))
+	print("Connected TMCM")
 	for x in topic:
 		client.subscribe(x)
 
