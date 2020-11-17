@@ -59,4 +59,32 @@ pvdb = {
 	'M5.TWR' :      {'type' : 'int',        'scan' : 0.2},
 	'M5.TWF' :      {'type' : 'int',        'scan' : 0.2},
 	'M5.TWV' :      {'type' : 'int',        'scan' : 0.2},
+
+        #MOT6
+        'M6.POS' :      {'type' : 'float',      'scan' : 0.2,   'prec' : 3},
+        'M6.RBV' :      {'type' : 'float',      'scan' : 0.2,   'prec' : 3},
+        'M6.SPEED' :    {'type' : 'float',      'scan' : 0.2,   'prec' : 3},
+        'M6.HOME' :     {'type' : 'int',        'scan' : 0.2},
+        'M6.TWR' :      {'type' : 'int',        'scan' : 0.2},
+        'M6.TWF' :      {'type' : 'int',        'scan' : 0.2},
+        'M6.TWV' :      {'type' : 'int',        'scan' : 0.2},
+
+        #MOT7
+        'M7.POS' :      {'type' : 'float',      'scan' : 0.2,   'prec' : 3},
+        'M7.RBV' :      {'type' : 'float',      'scan' : 0.2,   'prec' : 3},
+        'M7.SPEED' :    {'type' : 'float',      'scan' : 0.2,   'prec' : 3},
+        'M7.HOME' :     {'type' : 'int',        'scan' : 0.2},
+        'M7.TWR' :      {'type' : 'int',        'scan' : 0.2},
+        'M7.TWF' :      {'type' : 'int',        'scan' : 0.2},
+        'M7.TWV' :      {'type' : 'int',        'scan' : 0.2},
+
+        #MOT8
+        'M8.POS' :      {'type' : 'float',      'scan' : 0.2,   'prec' : 3},
+        'M8.RBV' :      {'type' : 'float',      'scan' : 0.2,   'prec' : 3},
+        'M8.SPEED' :    {'type' : 'float',      'scan' : 0.2,   'prec' : 3},
+        'M8.HOME' :     {'type' : 'int',        'scan' : 0.2},
+        'M8.TWR' :      {'type' : 'int',        'scan' : 0.2},
+        'M8.TWF' :      {'type' : 'int',        'scan' : 0.2},
+        'M8.TWV' :      {'type' : 'int',        'scan' : 0.2},
+
 }

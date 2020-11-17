@@ -9,18 +9,30 @@ from PyTrinamic.connections.ConnectionManager import ConnectionManager
 from MOT import MOT
 import time
 
-MOT_ELEMENTS = 6
+MOT_ELEMENTS = 9
 M = [None] * MOT_ELEMENTS
+cm = [None] * 2
+con = [None] * 2
 
 MOT_TWV_DEFAULT = 1.0
 MTWV = [MOT_TWV_DEFAULT] * MOT_ELEMENTS
  
-connectionManager = ConnectionManager()
-con = connectionManager.connect()
+cm[0] = ConnectionManager('--port /dev/ttyACM1 --module-id 1')
+cm[1] = ConnectionManager('--port /dev/ttyACM0 --module-id 2')
+
+con[0] = cm[0].connect()
+con[1] = cm[1].connect()
+
 
 # init the motors
 for x in range(len(M)):
-	M[x] = MOT(con,x)
+	if x < 6:
+		M[x] = MOT(con[0],x)
+	else:
+		M[x] = MOT(con[1],x-6)
+	print(x)
+	print(x-6)
+	print(M[x])
 
 # set the motor parameters
 for x in range(len(M)):
@@ -57,11 +69,6 @@ for x in range(len(M)):
 	topic.append('M' + str(x) + '.TWR');
 	topic.append('M' + str(x) + '.TWF');
 	topic.append('M' + str(x) + '.TWV');
-	#'M1.HOME','M1.SPEED','M1.POS','M1.RBV','M1.TWR','M1.TWF','M1.TWV',
-	#'M2.HOME','M2.SPEED','M2.POS','M2.RBV','M2.TWR','M2.TWF','M2.TWV',
-	#'M3.HOME','M3.SPEED','M3.POS','M3.RBV','M3.TWR','M3.TWF','M3.TWV',
-	#'M4.HOME','M4.SPEED','M4.POS','M4.RBV','M4.TWR','M4.TWF','M4.TWV',
-	#'M5.HOME','M5.SPEED','M5.POS','M5.RBV','M5.TWR','M5.TWF','M5.TWV']
 
 print(topic)
 
@@ -74,7 +81,6 @@ def home(inMotor, inTopic):
 		time.sleep(0.2)
 	inMotor.stop()
 	time.sleep(0.1)
-	hpos = inMotor.getActualPosition()
 	inMotor.setAxisParameter(1,0)
 	inMotor.moveTo(6400)
 
@@ -90,7 +96,6 @@ def posInMm(pos):
 
 def mm2Int(inMM):
 	return int(inMM * stepRev)
-
 
 def scan():
 	for x in range(len(M)):
