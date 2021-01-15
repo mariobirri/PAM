@@ -8,33 +8,27 @@ import PyTrinamic
 from PyTrinamic.connections.ConnectionManager import ConnectionManager
 from MOT import MOT
 import time
-import glob
-
-ports = glob.glob('/dev/ttyACM*')
-TMCM_NO_MOT_PER_MODULE = 6
-
 
 #get the number of TMCM
-TMCM_NO = len(ports)
-cmString = [None] * TMCM_NO
+cmString = [None] * var.TMCM_NO
 
-MOT_ELEMENTS = TMCM_NO_MOT_PER_MODULE * TMCM_NO
+MOT_ELEMENTS = var.TMCM_NO_MOT_PER_MODULE * var.TMCM_NO
 M = [None] * MOT_ELEMENTS
-cm = [None] * TMCM_NO
-con = [None] * TMCM_NO
+cm = [None] * var.TMCM_NO
+con = [None] * var.TMCM_NO
 
 MOT_TWV_DEFAULT = 1.0
 MTWV = [MOT_TWV_DEFAULT] * MOT_ELEMENTS
 
-for x in range(len(ports)):
-	cmString[x] = '--port ' + ports[x] + ' --module-id ' + str(x+1)
+for x in range(len(var.ports)):
+	cmString[x] = '--port ' + var.ports[x] + ' --module-id ' + str(x+1)
 	cm[x] = ConnectionManager(cmString[x])
 	con[x] = cm[x].connect()
 
 
 # init the motors
 for x in range(len(M)):
-	M[x] = MOT(con[x // TMCM_NO_MOT_PER_MODULE],x % TMCM_NO_MOT_PER_MODULE)
+	M[x] = MOT(con[x // var.TMCM_NO_MOT_PER_MODULE],x % var.TMCM_NO_MOT_PER_MODULE)
 
 
 # set the motor parameters
