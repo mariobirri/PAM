@@ -72,10 +72,10 @@ class MOT():
 
     # StallGuard2 Functions
     def setStallguard2Filter(self, enableFilter):
-        self.setAxisParameter(self.APs.StallGuard2FilterEnable, enableFilter)
+        self.setAxisParameter(self.APs.SG2FilterEnable, enableFilter)
 
     def setStallguard2Threshold(self, threshold):
-        self.setAxisParameter(self.APs.StallGuard2Threshold, threshold)
+        self.setAxisParameter(self.APs.SG2Threshold, threshold)
 
     def setStopOnStallVelocity(self, velocity):
         self.setAxisParameter(self.APs.StopOnStall, velocity)

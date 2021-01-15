@@ -8,35 +8,38 @@ import PyTrinamic
 from PyTrinamic.connections.ConnectionManager import ConnectionManager
 from MOT import MOT
 import time
+import glob
 
-MOT_ELEMENTS = 9
+ports = glob.glob('/dev/ttyACM*')
+TMCM_NO_MOT_PER_MODULE = 6
+
+
+#get the number of TMCM
+TMCM_NO = len(ports)
+cmString = [None] * TMCM_NO
+
+MOT_ELEMENTS = TMCM_NO_MOT_PER_MODULE * TMCM_NO
 M = [None] * MOT_ELEMENTS
-cm = [None] * 2
-con = [None] * 2
+cm = [None] * TMCM_NO
+con = [None] * TMCM_NO
 
 MOT_TWV_DEFAULT = 1.0
 MTWV = [MOT_TWV_DEFAULT] * MOT_ELEMENTS
- 
-cm[0] = ConnectionManager('--port /dev/ttyACM1 --module-id 1')
-cm[1] = ConnectionManager('--port /dev/ttyACM0 --module-id 2')
 
-con[0] = cm[0].connect()
-con[1] = cm[1].connect()
+for x in range(len(ports)):
+	cmString[x] = '--port ' + ports[x] + ' --module-id ' + str(x+1)
+	cm[x] = ConnectionManager(cmString[x])
+	con[x] = cm[x].connect()
 
 
 # init the motors
 for x in range(len(M)):
-	if x < 6:
-		M[x] = MOT(con[0],x)
-	else:
-		M[x] = MOT(con[1],x-6)
-	print(x)
-	print(x-6)
-	print(M[x])
+	M[x] = MOT(con[x // TMCM_NO_MOT_PER_MODULE],x % TMCM_NO_MOT_PER_MODULE)
+
 
 # set the motor parameters
 for x in range(len(M)):
-	if x != 4:
+	if x == 4:
 		M[x].setAxisParameter(140, 5) #microstep 32
 		M[x].setAxisParameter(6, 130) # run current
 		M[x].setAxisParameter(7, 2) # halt current
@@ -46,13 +49,17 @@ for x in range(len(M)):
 		M[x].setAxisParameter(5, 400000)
 		M[x].setMaxVelocity(15000)
 	else:
+
 		M[x].setAxisParameter(140, 5) #microstep 32
-		M[x].setAxisParameter(6, 24) # run current
-		M[x].setAxisParameter(7, 8) # halt current
-		M[x].setAxisParameter(174, -2)
-		M[x].setAxisParameter(182, 14000)
-		M[x].setAxisParameter(181, 14000)
-		M[x].setAxisParameter(5, 400000)
+
+		#currents
+		#M[x].setMaxCurrent(24)
+		M[x].setMotorRunCurrent(180) #setAxisParameter(6, 24) # run current
+		M[x].setMotorStandbyCurrent(8) #setAxisParameter(7, 8) # halt current
+		M[x].setAxisParameter(174, 20)
+		#M[x].setStallguard2Filter(0) #setAxisParameter(28, 1) #M[x].setAxisParameter(182, 114000)
+		#M[x].setStopOnStallVelocity(100000) #M[x].setAxisParameter(181, 114000)
+		#M[x].setAxisParameter(5, 400000)
 		M[x].setMaxVelocity(15000)
 
 stepRev = 200 * 32
