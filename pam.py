@@ -34,28 +34,14 @@ for x in range(len(M)):
 
 # set the motor parameters
 for x in range(len(M)):
-	if x == 4:
-		M[x].setAxisParameter(140, 5) #microstep 32
-		M[x].setAxisParameter(6, 130) # run current
-		M[x].setAxisParameter(7, 2) # halt current
-		M[x].setAxisParameter(174, 9)
-		M[x].setAxisParameter(182, 14000)
-		M[x].setAxisParameter(181, 14000)
-		M[x].setAxisParameter(5, 400000)
-		M[x].setMaxVelocity(15000)
-	else:
-
-		M[x].setAxisParameter(140, 5) #microstep 32
-
-		#currents
-		#M[x].setMaxCurrent(24)
-		M[x].setMotorRunCurrent(180) #setAxisParameter(6, 24) # run current
-		M[x].setMotorStandbyCurrent(8) #setAxisParameter(7, 8) # halt current
-		M[x].setAxisParameter(174, 20)
-		#M[x].setStallguard2Filter(0) #setAxisParameter(28, 1) #M[x].setAxisParameter(182, 114000)
-		#M[x].setStopOnStallVelocity(100000) #M[x].setAxisParameter(181, 114000)
-		#M[x].setAxisParameter(5, 400000)
-		M[x].setMaxVelocity(15000)
+	M[x].setAxisParameter(140, 5) #microstep 32
+	M[x].setAxisParameter(6, 130) # run current
+	M[x].setAxisParameter(7, 2) # halt current
+	M[x].setAxisParameter(174, 9)
+	M[x].setAxisParameter(182, 14000)
+	M[x].setAxisParameter(181, 14000)
+	M[x].setAxisParameter(5, 400000)
+	M[x].setMaxVelocity(15000)
 
 stepRev = 200 * 32
 mmStep = 1 / stepRev
