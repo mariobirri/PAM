@@ -8,6 +8,7 @@ import PyTrinamic
 from PyTrinamic.connections.ConnectionManager import ConnectionManager
 from MOT import MOT
 import time
+import json
 
 #get the number of TMCM
 cmString = [None] * var.TMCM_NO
@@ -61,7 +62,7 @@ mmStep = 1 / stepRev
 
 
 # topics to listen mqtt
-topic =['STOP','SCAN']
+topic =['STOP','SCAN','ALL','ALLPULL']
 for x in range(len(M)):
 	topic.append('M' + str(x) + '.HOME');
 	topic.append('M' + str(x) + '.SPEED');
@@ -102,6 +103,13 @@ def scan():
 	for x in range(len(M)):
 		publish.single('M' + str(x) + '.RBV', posInMm(M[x].getActualPosition()), hostname=var.mqtt_server)
 
+def all():
+	global MTWV
+	value = {}
+	for x in range(len(M)):
+		value['TWV' + str(x)] = MTWV[x]
+		value['SPEED' + str(x)] = posInMm(M[x].getMaxVelocity())
+	publish.single('ALLPULL',str(json.dumps(value)), hostname=var.mqtt_server)
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
@@ -115,12 +123,12 @@ def on_message(client, userdata, msg):
 	global MTWV
 
 	if msg.payload == '': msg.payload = 0;
-
 	if msg.topic == 'STOP': 
 		for x in range(len(M)): 
 			M[x].stop();
 
 	elif msg.topic == 'SCAN': scan();
+	elif msg.topic == 'ALL': all();
 
 	elif msg.topic[0] == 'M' and msg.topic[1].isnumeric():
 		indexOfPoint = msg.topic.find('.')
@@ -136,6 +144,7 @@ def on_message(client, userdata, msg):
 			elif CMD == 'TWR': M[MOTNR].moveTo(M[MOTNR].getActualPosition() - mm2Int(MTWV[MOTNR]), M[MOTNR].getMaxVelocity()) ;
 			elif CMD == 'TWF': M[MOTNR].moveTo(M[MOTNR].getActualPosition() + mm2Int(MTWV[MOTNR]), M[MOTNR].getMaxVelocity()) ;
 			elif CMD == 'TWV': MTWV[MOTNR] = msg2Float(msg);
+
 
 
 
