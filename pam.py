@@ -3,6 +3,7 @@
 import time
 import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
+import paho.mqtt.subscribe as subscribe
 import variables as var
 import PyTrinamic
 from PyTrinamic.connections.ConnectionManager import ConnectionManager
@@ -37,10 +38,10 @@ for x in range(len(M)):
 	M[x].setAxisParameter(140, 5) #microstep 32
 	M[x].setAxisParameter(6, 130) # run current
 	M[x].setAxisParameter(7, 2) # halt current
-	M[x].setAxisParameter(174, 9)
+	M[x].setAxisParameter(174, 20) # stall sensitivity
 	M[x].setAxisParameter(182, 14000)
 	M[x].setAxisParameter(181, 14000)
-	M[x].setAxisParameter(5, 400000)
+	M[x].setAxisParameter(5, 400000) # max acc
 	M[x].setMaxVelocity(15000)
 
 stepRev = 200 * 32
@@ -62,15 +63,23 @@ print(topic)
 
 # homing procedure
 def home(inMotor, inTopic):
-	inMotor.rotate(-15000)
+
+	inMotor.rotate(-15000) #home speed
 	time.sleep(0.1)
-	while inMotor.getActualVelocity() != 0:
+	inMotor.setAxisParameter(5,10000) # max acc
+	inMotor.setAxisParameter(174, 12) # change stall senitivity
+	stop = ""
+	while inMotor.getActualVelocity() != 0 and stop != "STOP":
+		msg = subscribe.simple("STOP", hostname=var.mqtt_server)
+		stop = str(msg.topic)
 		publish.single(inTopic, posInMm(inMotor.getActualPosition()), hostname=var.mqtt_server)
 		time.sleep(0.2)
 	inMotor.stop()
+	inMotor.setAxisParameter(174, 20) # change stall senitivity
 	time.sleep(0.1)
 	inMotor.setAxisParameter(1,0)
 	inMotor.moveTo(6400)
+	inMotor.setAxisParameter(5,400000) # max acc
 
 # convert a msg to an int value
 def msg2Int(inMsg):
@@ -106,7 +115,7 @@ def on_connect(client, userdata, flags, rc):
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
 
-	global MTWV
+	global MTWV, stop
 
 	if msg.payload == '': msg.payload = 0;
 	if msg.topic == 'STOP': 
